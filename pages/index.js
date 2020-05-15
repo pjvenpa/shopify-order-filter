@@ -139,8 +139,8 @@ class Index extends React.Component {
   }
 
   componentDidMount = () => {
-    var fetchUrl = `/api/orders?limit=250`;
-    fetch(fetchUrl, { method: "GET", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ method: 'GET', param: {}, queryStr: "" } ) }).then(response => response.json()).then(json => { 
+    var fetchUrl = `/api/orders`;
+    fetch(fetchUrl).then(response => response.json()).then(json => { 
       this.ApiResponse( "getorders", "orders", json, "GET"  );
     }).catch( (err) => {
         

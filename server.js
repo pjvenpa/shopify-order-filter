@@ -44,29 +44,19 @@ app.prepare().then(() => {
     }),
   );
 
-  
-
-  router.post('/api/:endpoint', koaBody(), async (ctx) => {
+  router.get('/api/:endpoint', async (ctx) => {
     try {
-      var params = ctx.request.body || {method: "GET"};
-      console.log( JSON.stringify(ctx.request.body) );
-      const method = params.method;
-      const param  = params.param || {};
-      const qstr = params.queryStr;
+     
       var request = {
-        method: method, 
+        method: "get", 
         headers: {
           "X-Shopify-Access-Token": ctx.cookies.get('accessToken'),
           'Content-Type': 'application/json'
         }
       };
-      if( method != "GET" ){
-          request.body = JSON.stringify( param );
-      }
 
-      console.log( request );
-
-      const results = await fetch("https://" + ctx.cookies.get('shopOrigin') + "/admin/api/2020-01/" + ctx.params.endpoint + ".json" + qstr,request)
+    
+      const results = await fetch("https://" + ctx.cookies.get('shopOrigin') + "/admin/api/2020-01/orders.json??limit=250",request)
       .then(response => response.json())
       .then(json => {
         return json;
