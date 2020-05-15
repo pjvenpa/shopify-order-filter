@@ -55,7 +55,7 @@ class Index extends React.Component {
   render() {
     return (
       <AppProvider i18n={translations}>
-      <Page>
+        <Page>
       <Card>
         <Card.Section>
 
@@ -139,9 +139,9 @@ class Index extends React.Component {
   }
 
   componentDidMount = () => {
-    
-    fetch(fetchUrl, { method: "POST", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ method: 'GET', param: {}, queryStr: "" } ) }).then(response => response.json()).then(json => { 
-      this.response( "getorders", "orders", json, "GET"  );
+    var fetchUrl = `/api/orders`;
+    fetch(fetchUrl, { method: "POST", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ method: 'GET', param: {}, queryStr: "?limit=250" } ) }).then(response => response.json()).then(json => { 
+      this.ApiResponse( "getorders", "orders", json, "GET"  );
     }).catch( (err) => {
         
     });
@@ -175,27 +175,41 @@ class Index extends React.Component {
     for (var i = 0; i < this.state.orders.length; i++) {
       order = this.state.orders[i];
       let locationFlg = false,
-          dateFlg = false;
+          dateFlg = false,
+           loc = "",
+              dd = "";
       for (var j = 0; j < order.line_items.length; j++) {
         lineItem = order.line_items[j];
         for (var t = 0; t < lineItem.properties.length; t++) {
-          if (lineItem.properties[t]["name"] == "Pickup Location" && this.state.LocSelected.indexOf(lineItem.properties[t]["value"]) != -1) {
-            locationFlg = true;
+          if (lineItem.properties[t]["name"] == "Pickup Location" ) {
+            if( this.state.LocSelected.indexOf(lineItem.properties[t]["value"]) != -1 ){
+              locationFlg = true;
+            }
+            loc = lineItem.properties[t]["value"];
           }
 
-          if (lineItem.properties[t]["name"] == "Pick a delivery date" && this.state.DateSelected.indexOf(lineItem.properties[t]["value"]) != -1) {
-              dateFlg = true;
+          if (lineItem.properties[t]["name"] == "Pick a delivery date" ) {
+              if( this.state.DateSelected.indexOf(lineItem.properties[t]["value"]) != -1 ){
+                dateFlg = true;
+              }
+              dd = lineItem.properties[t]["value"];
           }
         }
       }
 
       for (var p = 0; p < order.note_attributes.length; p++) {
-          if ( order.note_attributes[p]["name"] == "Place" && this.state.LocSelected.indexOf(order.note_attributes[p]["value"]) != -1) {
-            locationFlg = true;
+          if ( order.note_attributes[p]["name"] == "Place" ) {
+            if( this.state.LocSelected.indexOf(order.note_attributes[p]["value"]) != -1 ){
+              locationFlg = true;
+            }
+            loc = order.note_attributes[p]["value"];
           }
 
-          if (order.note_attributes[p]["name"] == "Date" && this.state.DateSelected.indexOf(order.note_attributes[p]["value"]) != -1) {
+          if (order.note_attributes[p]["name"] == "Date" || order.note_attributes[p]["name"] == "date") {
+            if( this.state.DateSelected.indexOf(order.note_attributes[p]["value"]) != -1 ){
             dateFlg = true;
+            }
+            dd = order.note_attributes[p]["value"];
           }
       }
 
@@ -214,7 +228,9 @@ class Index extends React.Component {
                     order.presentment_currency + " " + order.total_price, 
                     order.financial_status, 
                     order.fulfillment_status == null ? "Unfulfilled" : order.fulfillment_status, 
-                    order.line_items.length + "" ] );
+                    order.line_items.length + "",
+                    loc,
+                    dd] );
       }
 
     }
@@ -256,26 +272,34 @@ class Index extends React.Component {
           for (var j = 0; j < order.line_items.length; j++) {
             lineItem = order.line_items[j];
             for (var t = 0; t < lineItem.properties.length; t++) {
-              if (lineItem.properties[t]["name"] == "Pickup Location" && locations.indexOf(lineItem.properties[t]["value"]) == -1) {
-                locations.push(lineItem.properties[t]["value"]);
+              if (lineItem.properties[t]["name"] == "Pickup Location" ) {
+                if( locations.indexOf(lineItem.properties[t]["value"]) == -1){
+                  locations.push(lineItem.properties[t]["value"]);
+                }
                 loc = lineItem.properties[t]["value"];
               }
 
-              if (lineItem.properties[t]["name"] == "Pick a delivery date" && date.indexOf(lineItem.properties[t]["value"]) == -1) {
-                date.push(lineItem.properties[t]["value"]);
+              if (lineItem.properties[t]["name"] == "Pick a delivery date"  ) {
+                if(date.indexOf(lineItem.properties[t]["value"]) == -1){
+                 date.push(lineItem.properties[t]["value"]);
+                }
                 dd = lineItem.properties[t]["value"];
               }
             }
           }
 
           for (var p = 0; p < order.note_attributes.length; p++) {
-              if ( order.note_attributes[p]["name"] == "Place" && locations.indexOf(order.note_attributes[p]["value"]) == -1) {
-                locations.push(order.note_attributes[p]["value"]);
+              if ( order.note_attributes[p]["name"] == "Place" ) {
+                if(locations.indexOf(order.note_attributes[p]["value"]) == -1){
+                  locations.push(order.note_attributes[p]["value"]);
+                }
                 loc = order.note_attributes[p]["value"];
               }
 
-              if (order.note_attributes[p]["name"] == "Date" && date.indexOf(order.note_attributes[p]["value"]) == -1) {
-                date.push(order.note_attributes[p]["value"]);
+              if (order.note_attributes[p]["name"] == "Date" || order.note_attributes[p]["name"] == "date" ) {
+                if(date.indexOf(order.note_attributes[p]["value"]) == -1){
+                  date.push(order.note_attributes[p]["value"]);
+                }
                 dd = order.note_attributes[p]["value"];
               }
           }
