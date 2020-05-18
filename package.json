@@ -4,12 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node server.js",
-    "build": "next export",
-    
-    "start": "NODE_ENV=production node server.js",
-    "prod_start": "NODE_ENV=production node server.js"
+    "dev": "NODE_ENV=development node ./server.js",
+    "build": "next build",
+    "start": "next start",
+    "deploy-staging": "NODE_ENV=staging next build &&    NODE_ENV=staging node ./server.js",
+    "deploy-production": "NODE_ENV=production next build && NODE_ENV=production node ./server.js"
   },
   "keywords": [],
   "author": "",

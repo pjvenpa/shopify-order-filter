@@ -44,19 +44,22 @@ app.prepare().then(() => {
     }),
   );
 
-  router.get('/api/:endpoint', async (ctx) => {
+  
+
+  router.post('/api/:endpoint', koaBody(), async (ctx) => {
     try {
-     
+      
       var request = {
-        method: "get", 
+        method: "GET", 
         headers: {
           "X-Shopify-Access-Token": ctx.cookies.get('accessToken'),
           'Content-Type': 'application/json'
         }
       };
+     
 
-    
-      const results = await fetch("https://" + ctx.cookies.get('shopOrigin') + "/admin/api/2020-01/orders.json??limit=250",request)
+
+      const results = await fetch("https://" + ctx.cookies.get('shopOrigin') + "/admin/api/2020-01/orders.json?limit=250",request)
       .then(response => response.json())
       .then(json => {
         return json;

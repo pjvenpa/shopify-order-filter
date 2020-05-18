@@ -1,4 +1,4 @@
-import { Layout, Page, Card, AppProvider, Button, ResourceList,Filters, ChoiceList, DataTable, Link, Popover, OptionList } from '@shopify/polaris';
+import { Layout, Page, Card, AppProvider, Button, DataTable, Link, Popover, OptionList } from '@shopify/polaris';
 
 import translations from '@shopify/polaris/locales/en.json';
 import Cookies from 'js-cookie';
@@ -7,8 +7,11 @@ class Index extends React.Component {
 
 
   config = { apiKey: API_KEY, shopOrigin: Cookies.get("shopOrigin"), forceRedirect: true };
+  
 
   constructor(props) {
+
+    console.log(Cookies.get("accessToken") + " tokem");
     super(props);
     this.state = { 
       orders: [],
@@ -49,8 +52,6 @@ class Index extends React.Component {
       Date
     </Button>
   );
-
-
 
   render() {
     return (
@@ -140,7 +141,12 @@ class Index extends React.Component {
 
   componentDidMount = () => {
     var fetchUrl = `/api/orders`;
-    fetch(fetchUrl).then(response => response.json()).then(json => { 
+    fetch(fetchUrl, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      } }).then(response => response.json()).then(json => { 
       this.ApiResponse( "getorders", "orders", json, "GET"  );
     }).catch( (err) => {
         
