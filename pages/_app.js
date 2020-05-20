@@ -12,7 +12,7 @@ class OrderFilterApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>Sample App</title>
+          <title>Order Filter</title>
           <meta charSet="utf-8" />
         </Head>
         
