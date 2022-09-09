@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@shopify/app-bridge": "^1.21.4",
-    "@shopify/koa-shopify-auth": "^3.1.61",
+    "@shopify/koa-shopify-auth": "^3.1.63",
     "@shopify/polaris": "^4.22.0",
     "@zeit/next-css": "^1.0.1",
     "dotenv": "^8.2.0",
